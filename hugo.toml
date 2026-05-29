@@ -1,0 +1,50 @@
+baseURL = "https://drinkwhale.github.io/tech-blog/"
+locale = "ko"
+title = "tech-blog"
+theme = "PaperMod"
+paginate = 10
+
+[params]
+  author = "drinkwhale"
+  description = "DevOps / Cloud 기술 블로그"
+  defaultTheme = "auto"
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowToc = true
+  TocOpen = false
+  comments = false
+
+  [params.homeInfoParams]
+    Title = "drinkwhale's tech blog"
+    Content = "DevOps, Cloud, 인프라 트러블슈팅 경험을 기록합니다."
+
+  [params.profileMode]
+    enabled = false
+
+[menu]
+  [[menu.main]]
+    name = "Posts"
+    url = "/posts/"
+    weight = 1
+  [[menu.main]]
+    name = "Tags"
+    url = "/tags/"
+    weight = 2
+  [[menu.main]]
+    name = "Search"
+    url = "/search/"
+    weight = 3
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+    lineNos = true
+    lineNumbersInTable = false
+  [markup.goldmark.renderer]
+    unsafe = true
