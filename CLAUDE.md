@@ -45,6 +45,25 @@ hugo.toml         # 사이트 전체 설정
 
 글 완성 후 `draft: false` 로 변경해야 빌드에 포함됨.
 
+## Git Workflow
+
+**소스 수정이 있을 때는 반드시 새 브랜치를 만들고 작업할 것. main에 직접 커밋 금지.**
+
+| 변경 유형 | 브랜치 네이밍 | 예시 |
+|---|---|---|
+| 블로그 글 작성/수정 | `post/<slug>` | `post/k8s-resource-limit` |
+| 기능 추가 / 설정 변경 | `feat/<name>` | `feat/dark-mode` |
+| 버그 수정 | `fix/<name>` | `fix/broken-image-link` |
+
+```bash
+# 새 브랜치 생성 후 작업
+git checkout -b post/my-new-post
+
+# 작업 완료 후 main에 merge
+git checkout main
+git merge post/my-new-post
+```
+
 ## Deployment
 
 `main` 브랜치에 push하면 GitHub Actions가 자동으로 빌드 → GitHub Pages 배포.
