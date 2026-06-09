@@ -1,7 +1,7 @@
 ---
 title: "마이크로세그멘테이션 완전 정복: 온프레미스-클라우드 하이브리드 환경 Quick Start"
 date: 2026-06-02T15:16:25+09:00
-draft: true
+draft: false
 description: "마이크로세그멘테이션 개념부터 온프레미스·클라우드 하이브리드 환경 실전 적용까지. NSX-T, Calico, AWS Security Group 조합으로 동서(East-West) 트래픽을 제어하는 방법을 단계별로 정리합니다."
 tags: ["microsegmentation", "zero-trust", "network-security", "nsx-t", "calico", "hybrid-cloud", "devops"]
 categories: ["Network Security", "Cloud"]

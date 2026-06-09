@@ -1,7 +1,7 @@
 ---
 title: "RKE2 + Rancher 환경에서 Ingress를 HTTPRoute로 마이그레이션하기 (Envoy Gateway)"
 date: 2026-06-01T17:01:15+09:00
-draft: true
+draft: false
 tags: ["Kubernetes", "Gateway API", "HTTPRoute", "Envoy Gateway", "Rancher", "RKE2", "Ingress", "마이그레이션"]
 categories: ["DevOps", "Kubernetes"]
 description: "RKE2 + Rancher 클러스터에서 기존 Ingress 리소스를 Kubernetes Gateway API의 HTTPRoute로 전환하는 과정과 삽질 기록"
