@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(hugo server *)",
+      "Bash(kill %1)",
+      "Bash(pkill -f \"hugo server\")",
+      "Bash(git commit -m ' *)",
+      "Bash(git -C /Users/jeongsikim/work/tech-blog status)",
+      "Bash(git -C /Users/jeongsikim/work/tech-blog log --oneline -3)",
+      "Bash(git -C /Users/jeongsikim/work/tech-blog show --stat 58f0808)",
+      "Bash(git -C /Users/jeongsikim/work/tech-blog add .claude/commands/ .claude/agents/)",
+      "Bash(git -C /Users/jeongsikim/work/tech-blog diff --staged --stat)",
+      "Bash(git -C /Users/jeongsikim/work/tech-blog commit -m ' *)",
+      "Bash(git -C /Users/jeongsikim/work/tech-blog push origin main)",
+      "Bash(ls /Users/jeongsikim/work/tech-blog && echo \"---\" && ls /Users/jeongsikim/work/ECC 2>/dev/null || echo \"ECC 디렉토리 없음\")",
+      "Read(//Users/jeongsikim/work/ECC/**)",
+      "Bash(git checkout *)",
+      "Bash(mkdir -p /Users/jeongsikim/work/tech-blog/.claude/skills)",
+      "Bash(cp /Users/jeongsikim/work/ECC/agents/architect.md /Users/jeongsikim/work/tech-blog/.claude/agents/)",
+      "Bash(cp /Users/jeongsikim/work/ECC/agents/seo-specialist.md /Users/jeongsikim/work/tech-blog/.claude/agents/)",
+      "Bash(cp /Users/jeongsikim/work/ECC/agents/doc-updater.md /Users/jeongsikim/work/tech-blog/.claude/agents/)",
+      "Bash(cp /Users/jeongsikim/work/ECC/commands/plan-prd.md /Users/jeongsikim/work/tech-blog/.claude/commands/)",
+      "Bash(cp /Users/jeongsikim/work/ECC/commands/update-docs.md /Users/jeongsikim/work/tech-blog/.claude/commands/)",
+      "Bash(cp -r /Users/jeongsikim/work/ECC/skills/article-writing /Users/jeongsikim/work/tech-blog/.claude/skills/)",
+      "Bash(cp -r /Users/jeongsikim/work/ECC/skills/architecture-decision-records /Users/jeongsikim/work/tech-blog/.claude/skills/)",
+      "Bash(cp -r /Users/jeongsikim/work/ECC/skills/blueprint /Users/jeongsikim/work/tech-blog/.claude/skills/)",
+      "Bash(cp -r /Users/jeongsikim/work/ECC/skills/deep-research /Users/jeongsikim/work/tech-blog/.claude/skills/)",
+      "Bash(cp -r /Users/jeongsikim/work/ECC/skills/content-engine /Users/jeongsikim/work/tech-blog/.claude/skills/)",
+      "Bash(git commit *)",
+      "Bash(git merge *)",
+      "Bash(git pull *)",
+      "WebFetch(domain:x.com)"
+    ]
+  }
+}

@@ -4,7 +4,7 @@ date: 2026-06-02T10:00:56+09:00
 draft: false
 tags: ["Claude Code", "AI", "자동화", "블로그", "Agent", "Skill"]
 categories: ["AI", "자동화"]
-description: "Claude Code의 Agent와 Skill 개념을 이해하고, sc:implement 같은 Skill을 활용해 기술 블로그 글을 자동으로 작성하는 방법을 정리한다."
+description: "Claude Code의 Agent와 Skill 개념을 이해하고, write-post 같은 프로젝트 전용 Skill을 활용해 기술 블로그 글을 자동으로 작성하는 방법을 정리한다."
 ---
 
 ## TL;DR
@@ -65,15 +65,17 @@ Skill은 **Agent를 실행하는 슬래시 커맨드**다.
 자주 쓰는 Skill 목록:
 
 ```
-/sc:implement   — 기능 구현 (전문 페르소나 활성화)
-/sc:document    — 문서 생성
-/sc:analyze     — 코드 분석 (품질·보안·성능·아키텍처)
-/sc:improve     — 코드 품질 개선
-/sc:test        — 테스트 작성 및 실행
-/sc:design      — 아키텍처·API 설계
-/sc:explain     — 코드·개념 설명
+/write-post      — Hugo 블로그 STAR 구조 초안 자동 생성 (이 블로그 전용)
+/article-writing — 장문 콘텐츠 작성 (voice·브랜드 일관성 중심)
+/sc:implement    — 기능 구현 (전문 페르소나 활성화) ← 블로그 글 작성에는 부적합
+/sc:document     — 문서 생성
+/sc:analyze      — 코드 분석 (품질·보안·성능·아키텍처)
+/sc:improve      — 코드 품질 개선
+/sc:test         — 테스트 작성 및 실행
+/sc:design       — 아키텍처·API 설계
+/sc:explain      — 코드·개념 설명
 /sc:troubleshoot — 문제 진단 및 해결
-/sc:index       — 프로젝트 문서·지식베이스 생성
+/sc:index        — 프로젝트 문서·지식베이스 생성
 ```
 
 ### Skill 파일 위치 — 전역 vs 프로젝트
@@ -172,19 +174,19 @@ CLAUDE.md가 프로젝트 루트에 있어도, Agent를 호출할 때 맥락을 
 빈 템플릿에서 교과서식 글을 써버린다.
 
 ```markdown
-# 잘못된 호출 — Agent가 프로젝트 맥락을 모름
+# 잘못된 호출 — 코드 구현용 Skill을 글쓰기에 사용
 /sc:implement "블로그 글 작성"
 
-# 올바른 호출 — 주제·환경·삽질 포인트를 직접 전달
-/sc:implement
-이 프로젝트는 Hugo + PaperMod 블로그입니다.
-content/posts/ 아래에 새 파일을 만들고
-archetypes/default.md의 STAR 구조로 글을 작성해주세요.
-
+# 올바른 호출 — 프로젝트 전용 /write-post Skill 사용
+/write-post
 주제: Redis 캐시 트러블슈팅
 환경: Kubernetes, Redis 7.x
-실제 겪은 문제: maxmemory-policy 기본값(noeviction)으로 OOM 발생
+문제: maxmemory-policy 기본값(noeviction)으로 OOM 발생
 ```
+
+`/write-post`는 `.claude/commands/write-post.md`에 정의된 프로젝트 전용 Skill로,
+Hugo archetypes 템플릿 적용과 STAR 구조 작성이 이미 내장되어 있다.
+`/sc:implement`는 기능 코드 구현 전용이므로 블로그 글쓰기에는 맞지 않는다.
 
 ---
 
@@ -208,22 +210,21 @@ Agent가 프로젝트를 처음 볼 때 읽는 파일이 `CLAUDE.md`다.
 
 ### Step 2. Skill로 글쓰기 위임
 
-Skill을 호출할 때 다음 네 가지 정보를 전달하면 완성도 높은 초안이 나온다:
+블로그 글 작성에는 `/write-post` Skill을 사용한다.
+다음 네 가지 정보를 전달하면 완성도 높은 초안이 나온다:
 
 ```
-/sc:implement
-
-다음 조건으로 블로그 초안을 작성해주세요.
-
-[주제] Kubernetes Pod OOM 트러블슈팅
-[환경] RKE2 v1.29, 워커 노드 8GB RAM
-[문제] 특정 시간대에 Pod가 OOMKilled되는 현상 반복
-[원인] resource limits 미설정 컨테이너의 메모리 누수
-[해결] VPA(Vertical Pod Autoscaler) 도입 + limits 정책 강제화
-
-파일 생성: hugo new content posts/k8s-pod-oom-troubleshooting.md
-구조: archetypes/default.md의 STAR 형식 준수
+/write-post
+주제: Kubernetes Pod OOM 트러블슈팅
+슬러그: k8s-pod-oom-troubleshooting
+환경: RKE2 v1.29, 워커 노드 8GB RAM
+문제: 특정 시간대에 Pod가 OOMKilled되는 현상 반복. resource limits 미설정 컨테이너의 메모리 누수가 원인
+해결: VPA(Vertical Pod Autoscaler) 도입 + limits 정책 강제화
 ```
+
+`/write-post` Skill은 내부적으로 `hugo new content posts/<슬러그>.md`를 실행하고
+`archetypes/default.md`의 STAR 구조를 자동으로 적용한다.
+`/sc:implement`에 긴 브리핑을 붙여 쓸 필요가 없다.
 
 ### Step 3. 로컬에서 확인 및 보완
 
@@ -258,7 +259,7 @@ git push
 메모앱에 주제 기록
   └─ 문제, 환경, 핵심 삽질 포인트 3줄
          ↓
-/sc:implement 으로 초안 위임 (5~10분)
+/write-post 으로 초안 위임 (5~10분)
          ↓
 hugo server -D 로 확인
          ↓
@@ -287,9 +288,9 @@ git push → 자동 배포
 CLAUDE.md가 그 온보딩 문서 역할을 한다. 잘 쓰인 CLAUDE.md 하나가 매번의 브리핑을 대체한다.
 
 **Skill은 역할의 프리셋이다.**
-`/sc:implement`와 `/sc:document`는 같은 Claude지만 전혀 다른 관점으로 접근한다.
-글 작성엔 `technical-writer` 관점이, 코드 리뷰엔 `quality-engineer` 관점이 더 적합하다.
-Skill을 선택하는 것 자체가 품질에 영향을 준다.
+`/write-post`와 `/sc:implement`는 같은 Claude지만 전혀 다른 관점으로 접근한다.
+블로그 글 작성엔 Hugo archetypes와 STAR 구조를 아는 `/write-post`가, 코드 구현엔 `/sc:implement`가 적합하다.
+범용 Skill에 긴 브리핑을 붙이는 것보다 목적에 맞는 전용 Skill 하나가 품질이 높다.
 
 **병렬 실행은 컨텍스트 보호다.**
 Agent를 백그라운드로 돌리면 메인 대화창이 긴 파일 탐색 결과로 가득 차지 않는다.
