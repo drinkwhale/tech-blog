@@ -31,5 +31,8 @@
       "Bash(git pull *)",
       "WebFetch(domain:x.com)"
     ]
+  },
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": true
   }
 }
