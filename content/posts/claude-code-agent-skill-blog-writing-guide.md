@@ -4,104 +4,45 @@ date: 2026-06-02T10:00:56+09:00
 draft: false
 tags: ["Claude Code", "AI", "자동화", "블로그", "Agent", "Skill"]
 categories: ["AI", "자동화"]
-description: "Claude Code의 Agent와 Skill 개념을 이해하고, write-post 같은 프로젝트 전용 Skill을 활용해 기술 블로그 글을 자동으로 작성하는 방법을 정리한다."
+mermaid: true
+description: "Claude Code의 Agent와 Skill이 각각 무엇이고 왜 필요하며 어떻게 동작하는지 정리한다. /write-post 같은 프로젝트 전용 Skill로 기술 블로그 글을 자동 작성하는 흐름을 다룬다."
 ---
 
 ## TL;DR
 
-> - Claude Code에서 **Agent**는 특정 역할에 전문화된 독립 AI 인스턴스이고, **Skill**은 그 Agent를 실행하는 슬래시 커맨드다.
-> - Agent는 콜드 스타트이므로 CLAUDE.md에 블로그 컨텍스트를 잘 정의해두는 것이 핵심이다.
-> - 주제와 삽질 경험만 던지면 STAR 구조 초안을 자동으로 받을 수 있다.
+> - **Agent**는 특정 역할에 전문화된 독립 AI 인스턴스, **Skill**은 그 Agent를 초기화해 실행하는 슬래시 커맨드다.
+> - Agent는 콜드 스타트라 CLAUDE.md에 프로젝트 컨텍스트를 잘 정의해두는 것이 품질의 핵심이다.
+> - 주제·환경·문제만 던지면 `/write-post`가 STAR 구조 초안을 자동으로 만들어 준다.
 
 ---
 
-## 배경 / 문제 상황
+## 무엇인가 (What)
 
-기술 블로그를 운영하다 보면 글을 쓰는 행위 자체보다 **구조를 잡는 데 시간이 더 걸린다**.
+Claude Code의 글쓰기 자동화는 **Agent**와 **Skill** 두 개념 위에 서 있다.
 
-- 경험한 문제는 머릿속에 있는데, STAR 형식으로 정리하려면 별도의 작업이 필요하다.
-- 반복적인 섹션(TL;DR, 배경, 결과 테이블)마다 같은 고민을 반복한다.
-- 결국 "나중에 써야지"가 쌓여서 블로그가 방치된다.
+### 핵심 개념 요약
 
-Claude Code의 **Agent**와 **Skill** 시스템을 활용하면 이 반복 작업을 위임할 수 있다.
+| 개념  | 정의                                  | 비유                      |
+| ----- | ------------------------------------- | ------------------------- |
+| Agent | 특정 역할에 전문화된 독립 AI 인스턴스 | 특정 분야 전문가          |
+| Skill | Agent를 초기화·실행하는 슬래시 커맨드 | 전문가를 부르는 호출 버튼 |
 
----
+### Agent — 역할에 특화된 독립 인스턴스
 
-## Agent와 Skill — 개념 정리
+Agent는 메인 Claude(일반 대화)와 달리 **콜드 스타트**로 동작한다. 현재 대화 맥락을 모른 채 시작하므로 별도 브리핑이 필요하다.
 
-### Agent란?
+| 구분          | 메인 Claude         | Agent                              |
+| ------------- | ------------------- | ---------------------------------- |
+| 컨텍스트      | 현재 대화 전체를 앎 | **콜드 스타트** — 별도 브리핑 필요 |
+| 역할          | 범용                | 특정 역할에 전문화                 |
+| 실행 방식     | 현재 세션           | 독립 서브프로세스로 병렬 실행 가능 |
+| 컨텍스트 보호 | —                   | 메인 컨텍스트 창을 오염시키지 않음 |
 
-Claude Code에서 Agent는 **특정 역할에 최적화된 독립 AI 인스턴스**다.
+내장 Agent 타입 예시 — `technical-writer`(기술 문서), `backend-architect`(백엔드 설계), `security-engineer`(보안 검토), `Explore`(읽기 전용 코드 탐색) 등 역할별로 나뉜다.
 
-메인 Claude(일반 대화)와 다른 점:
+### Skill — Agent를 부르는 슬래시 커맨드
 
-| 구분          | 메인 Claude         | Agent                                |
-| ------------- | ------------------- | ------------------------------------ |
-| 컨텍스트      | 현재 대화 전체를 앎 | **콜드 스타트** — 별도로 브리핑 필요 |
-| 역할          | 범용                | 특정 역할에 전문화                   |
-| 실행 방식     | 현재 세션           | 독립 서브프로세스로 병렬 실행 가능   |
-| 컨텍스트 보호 | —                   | 메인 컨텍스트 창을 오염시키지 않음   |
-
-내장 Agent 타입 예시:
-
-```
-backend-architect   — 데이터 무결성·보안 중심 백엔드 설계
-frontend-architect  — UX·성능 중심 UI 구현
-security-engineer   — 취약점 탐지 및 보안 검토
-technical-writer    — 기술 문서 작성
-quality-engineer    — 테스트 전략 및 엣지 케이스 탐지
-refactoring-expert  — 코드 품질 개선
-Explore             — 읽기 전용 코드 탐색 (파일 검색, grep)
-Plan                — 구현 계획 수립
-```
-
-### Skill이란?
-
-Skill은 **Agent를 실행하는 슬래시 커맨드**다.
-
-`/sc:implement`, `/sc:document` 같은 Skill을 입력하면 Claude Code가 해당 역할에 맞는
-전문화 프롬프트와 함께 작업을 시작한다.
-
-자주 쓰는 Skill 목록:
-
-```
-/write-post      — Hugo 블로그 STAR 구조 초안 자동 생성 (이 블로그 전용)
-/article-writing — 장문 콘텐츠 작성 (voice·브랜드 일관성 중심)
-/sc:implement    — 기능 구현 (전문 페르소나 활성화) ← 블로그 글 작성에는 부적합
-/sc:document     — 문서 생성
-/sc:analyze      — 코드 분석 (품질·보안·성능·아키텍처)
-/sc:improve      — 코드 품질 개선
-/sc:test         — 테스트 작성 및 실행
-/sc:design       — 아키텍처·API 설계
-/sc:explain      — 코드·개념 설명
-/sc:troubleshoot — 문제 진단 및 해결
-/sc:index        — 프로젝트 문서·지식베이스 생성
-```
-
-### Skill 파일 위치 — 전역 vs 프로젝트
-
-Skill 파일은 Markdown으로 작성하며, **두 곳** 중 하나에 둔다.
-
-```
-~/.claude/commands/          ← 전역: 모든 프로젝트에서 사용 가능
-└── sc/
-    ├── implement.md         # /sc:implement
-    ├── document.md          # /sc:document
-    └── ...
-
-<프로젝트 루트>/.claude/commands/   ← 프로젝트 전용
-└── write-post.md            # /write-post (이 블로그에서만 사용)
-```
-
-| 위치                  | 적용 범위            | 용도                  |
-| --------------------- | -------------------- | --------------------- |
-| `~/.claude/commands/` | 전역 — 모든 프로젝트 | 범용 워크플로우 Skill |
-| `.claude/commands/`   | 해당 프로젝트만      | 프로젝트 특화 Skill   |
-
-**같은 이름이면 프로젝트 Skill이 우선**된다.
-전역 Skill을 프로젝트에서 재정의하고 싶을 때 활용할 수 있다.
-
-#### Skill 파일 구조
+Skill은 Agent를 **어떻게 초기화할지** 정의하는 래퍼(wrapper)다. `/write-post`, `/sc:document` 같은 커맨드를 입력하면 해당 역할에 맞는 전문화 프롬프트와 함께 작업이 시작된다.
 
 ```markdown
 ---
@@ -111,15 +52,6 @@ description: "Hugo 블로그 STAR 구조 초안 자동 생성"
 
 # /write-post — Hugo 블로그 포스트 자동 생성
 
-## 사용법
-
-/write-post
-주제: <글 주제>
-슬러그: <파일명 kebab-case>
-환경: <버전, 플랫폼>
-문제: <겪은 문제>
-해결: <해결 방법>
-
 ## 동작 순서
 
 1. `hugo new content posts/<슬러그>.md` 실행
@@ -127,190 +59,106 @@ description: "Hugo 블로그 STAR 구조 초안 자동 생성"
 3. front matter tags·categories 채우기
 ```
 
-`name`과 `description`은 Claude가 Skill을 인식하는 데 쓰이고,
-본문은 실제로 Agent가 따르는 지시사항이다.
-
-### Agent와 Skill의 관계
-
-```
-사용자 입력: /sc:implement "Redis 캐시 레이어 추가"
-         ↓
-   Skill 로더가 실행됨
-         ↓
-   전문화된 Agent 프롬프트 적용
-   (backend-architect 역할)
-         ↓
-   파일 읽기 → 코드 작성 → 결과 반환
-```
-
-Skill은 Agent를 **어떻게 초기화할지** 정의하는 래퍼(wrapper)라고 이해하면 된다.
-
-### 병렬 실행이 가능하다
-
-독립적인 작업은 Agent를 동시에 여러 개 띄울 수 있다.
-예를 들어 두 편의 글 초안을 동시에 작성하거나, 탐색과 구현을 병렬로 처리한다.
-
-```
-Agent 1 (technical-writer): Redis 트러블슈팅 글 초안 작성
-Agent 2 (technical-writer): Envoy Gateway 마이그레이션 글 초안 작성
-→ 동시 실행 → 메인 컨텍스트에서 결과 리뷰
-```
+`name`·`description`은 Claude가 Skill을 인식하는 데 쓰이고, 본문은 Agent가 실제로 따르는 지시사항이다.
 
 ---
 
-## 시도한 것들 (삽질 과정)
+## 왜 필요한가 (Why)
 
-### 1차 시도 — 그냥 "글 써줘"
+기술 블로그를 운영하다 보면 글을 쓰는 행위 자체보다 **구조를 잡는 데 시간이 더 걸린다**.
 
-처음엔 Claude에게 단순히 "RKE2 Ingress 마이그레이션 글 써줘"라고 했다.
+- 경험은 머릿속에 있는데, STAR 형식으로 정리하려면 별도 작업이 필요하다.
+- 반복 섹션(TL;DR, 배경, 결과 테이블)마다 같은 고민을 반복한다.
+- 결국 "나중에 써야지"가 쌓여 블로그가 방치된다.
 
-결과는 나쁘지 않았지만 문제가 있었다:
+아래는 직접 작성할 때 시간이 어디서 새는지를 보여준다.
 
-- 블로그 프로젝트의 archetypes 템플릿을 반영하지 못함
-- 내가 실제로 겪은 삽질 과정이 아닌 교과서식 설명이 됨
-- `hugo new content`로 파일을 만들고 내용을 채우는 Hugo 워크플로우를 모름
-
-### 2차 시도 — Agent 호출 시 컨텍스트 미전달
-
-Agent는 콜드 스타트이기 때문에 현재 대화의 컨텍스트를 모른다.
-CLAUDE.md가 프로젝트 루트에 있어도, Agent를 호출할 때 맥락을 브리핑하지 않으면
-빈 템플릿에서 교과서식 글을 써버린다.
-
-```markdown
-# 잘못된 호출 — 코드 구현용 Skill을 글쓰기에 사용
-
-/sc:implement "블로그 글 작성"
-
-# 올바른 호출 — 프로젝트 전용 /write-post Skill 사용
-
-/write-post
-주제: Redis 캐시 트러블슈팅
-환경: Kubernetes, Redis 7.x
-문제: maxmemory-policy 기본값(noeviction)으로 OOM 발생
+```mermaid
+graph LR
+    Idea[경험·아이디어] --> Struct[구조 잡기<br/>30분~1시간]
+    Struct --> Boiler[반복 섹션 작성]
+    Boiler --> Write[본문 작성]
+    Write --> Stall[지연·방치]
+    Stall -.쌓임.-> Idea
 ```
 
-`/write-post`는 `.claude/commands/write-post.md`에 정의된 프로젝트 전용 Skill로,
-Hugo archetypes 템플릿 적용과 STAR 구조 작성이 이미 내장되어 있다.
-`/sc:implement`는 기능 코드 구현 전용이므로 블로그 글쓰기에는 맞지 않는다.
+Agent와 Skill은 **구조 잡기와 반복 섹션 작성을 위임**해 이 병목을 끊는다. 작성자는 실제 경험과 수치 입력에만 집중하면 된다.
 
 ---
 
-## 해결 과정
+## 어떻게 동작하는가 (How)
 
-### Step 1. CLAUDE.md에 블로그 컨텍스트 명시
+Skill을 입력하면 로더가 전문화된 Agent 프롬프트를 적용하고, Agent가 CLAUDE.md 컨텍스트를 읽어 작업을 수행한다.
 
-Agent가 프로젝트를 처음 볼 때 읽는 파일이 `CLAUDE.md`다.
-블로그 글 작성 규칙을 여기에 정의해두면 매번 브리핑을 반복하지 않아도 된다.
+```mermaid
+flowchart TD
+    User["사용자: /write-post 입력"] --> Loader[Skill 로더]
+    Loader --> Prompt[전문화된 Agent 프롬프트 적용]
+    Prompt --> Agent["Agent (콜드 스타트)"]
+    CLAUDE[CLAUDE.md 컨텍스트] --> Agent
+    Agent --> Hugo["hugo new content 실행"]
+    Hugo --> Draft[STAR 구조 초안 생성]
+```
+
+### Step 1. CLAUDE.md에 컨텍스트 명시
+
+Agent가 콜드 스타트이므로, 매번 브리핑하는 대신 프로젝트 규칙을 CLAUDE.md에 적어둔다.
 
 ```markdown
 ## Writing Convention
 
-- 새 글: `hugo new content posts/<slug>.md` 로 생성 (archetypes 자동 적용)
+- 새 글: `hugo new content posts/<slug>.md` (archetypes 자동 적용)
 - 구조: TL;DR → 배경 → 삽질 과정 → 해결 → 결과 → 회고
-- `draft: false` 로 변경해야 빌드에 포함됨
-- 실제 경험 기반으로 작성 (교과서식 설명 금지)
-- 코드 블록에는 실제 명령어·설정값 사용
-- 결과 섹션에는 Before/After 수치 테이블 포함
+- 실제 경험 기반 작성 (교과서식 설명 금지)
+- 결과 섹션에 Before/After 수치 테이블 포함
 ```
 
 ### Step 2. Skill로 글쓰기 위임
 
-블로그 글 작성에는 `/write-post` Skill을 사용한다.
-다음 네 가지 정보를 전달하면 완성도 높은 초안이 나온다:
-
-```
+```text
 /write-post
 주제: Kubernetes Pod OOM 트러블슈팅
 슬러그: k8s-pod-oom-troubleshooting
 환경: RKE2 v1.29, 워커 노드 8GB RAM
-문제: 특정 시간대에 Pod가 OOMKilled되는 현상 반복. resource limits 미설정 컨테이너의 메모리 누수가 원인
-해결: VPA(Vertical Pod Autoscaler) 도입 + limits 정책 강제화
+문제: 특정 시간대 Pod OOMKilled 반복 (limits 미설정 컨테이너 메모리 누수)
+해결: VPA 도입 + limits 정책 강제화
 ```
 
-`/write-post` Skill은 내부적으로 `hugo new content posts/<슬러그>.md`를 실행하고
-`archetypes/default.md`의 STAR 구조를 자동으로 적용한다.
-`/sc:implement`에 긴 브리핑을 붙여 쓸 필요가 없다.
+`/write-post`는 내부적으로 `hugo new content`를 실행하고 `archetypes/default.md`의 STAR 구조를 자동 적용한다.
 
-### Step 3. 로컬에서 확인 및 보완
+### Step 3. 로컬 확인 후 보완·배포
 
-Agent가 초안을 작성하면 로컬에서 렌더링을 먼저 확인한다.
-
-```bash
-# 드래프트 포함 로컬 서버 실행
-hugo server -D
-
-# 브라우저에서 확인
-open http://localhost:1313
-```
-
-보완할 포인트:
-
-1. 삽질 과정에 실제 에러 메시지·로그 추가
-2. 결과 테이블 Before/After 수치 직접 입력
-3. 참고 자료 링크 확인
-4. `draft: false` 변경
-
-### Step 4. 배포
-
-```bash
-git add content/posts/k8s-pod-oom-troubleshooting.md
-git commit -m "feat: Kubernetes Pod OOM 트러블슈팅 포스트 추가"
-git push
-# GitHub Actions가 자동으로 빌드 → GitHub Pages 배포
-```
-
-### Step 5. 반복 가능한 워크플로우
-
-```
-메모앱에 주제 기록
-  └─ 문제, 환경, 핵심 삽질 포인트 3줄
-         ↓
-/write-post 으로 초안 위임 (5~10분)
-         ↓
-hugo server -D 로 확인
-         ↓
-실제 경험 수치·에러 보완 (20~30분)
-         ↓
-git push → 자동 배포
-```
+`hugo server -D`로 렌더링을 확인하고, 실제 에러 메시지·Before/After 수치를 채운 뒤 `git push`하면 GitHub Actions가 자동 배포한다.
 
 ---
 
-## 결과
+## 선택 가이드
 
-| 항목             | Before (직접 작성) | After (Agent + Skill)       |
-| ---------------- | ------------------ | --------------------------- |
-| 초안 작성 시간   | 1~2시간            | 5~10분                      |
-| 구조 잡는 시간   | 30분               | 0분 (템플릿 자동 적용)      |
-| 발행 주기        | 월 0~1편           | 월 3~4편                    |
-| 작성자 집중 영역 | 전체               | 삽질 과정 구체화, 수치 입력 |
+### 어떤 Skill을 쓸까
 
----
+| 작업            | 권장 Skill          | 이유                             |
+| --------------- | ------------------- | -------------------------------- |
+| 블로그 STAR 글  | `/write-post`       | Hugo archetypes·STAR 구조 내장   |
+| 개념 소개 글    | `tech-concept-post` | What/Why/How + Mermaid 구조      |
+| 장문·voice 중심 | `/article-writing`  | 브랜드 voice 일관성              |
+| 코드 구현       | `/sc:implement`     | 기능 구현 전용 — 글쓰기엔 부적합 |
 
-## 배운 점 / 회고
+### Skill 파일은 어디에 둘까
 
-**Agent는 콜드 스타트다.**
-가장 중요한 교훈이다. Agent를 부를 때마다 "새 동료에게 온보딩하는 것"처럼 브리핑해야 한다.
-CLAUDE.md가 그 온보딩 문서 역할을 한다. 잘 쓰인 CLAUDE.md 하나가 매번의 브리핑을 대체한다.
+| 위치                  | 적용 범위            | 용도                  |
+| --------------------- | -------------------- | --------------------- |
+| `~/.claude/commands/` | 전역 — 모든 프로젝트 | 범용 워크플로우 Skill |
+| `.claude/commands/`   | 해당 프로젝트만      | 프로젝트 특화 Skill   |
 
-**Skill은 역할의 프리셋이다.**
-`/write-post`와 `/sc:implement`는 같은 Claude지만 전혀 다른 관점으로 접근한다.
-블로그 글 작성엔 Hugo archetypes와 STAR 구조를 아는 `/write-post`가, 코드 구현엔 `/sc:implement`가 적합하다.
-범용 Skill에 긴 브리핑을 붙이는 것보다 목적에 맞는 전용 Skill 하나가 품질이 높다.
-
-**병렬 실행은 컨텍스트 보호다.**
-Agent를 백그라운드로 돌리면 메인 대화창이 긴 파일 탐색 결과로 가득 차지 않는다.
-탐색 작업이 많을수록, 혹은 독립적인 초안을 여러 개 동시에 뽑을 때 효과적이다.
-
-**AI의 역할은 대필이 아니라 구조화다.**
-실제 경험과 수치는 내가 채워야 한다. 그 부분이 기술 블로그의 핵심 가치다.
-Agent는 구조를 잡아주고, 인간은 경험을 채운다. 이 분업이 지속 가능한 블로그 운영을 만든다.
+같은 이름이면 **프로젝트 Skill이 우선**되므로, 전역 Skill을 프로젝트에서 재정의할 수 있다.
 
 ---
 
 ## 참고 자료
 
-- [Claude Code 공식 문서 — Agent](https://docs.anthropic.com/en/docs/claude-code/sub-agents)
-- [Claude Code 공식 문서 — 슬래시 커맨드](https://docs.anthropic.com/en/docs/claude-code/slash-commands)
+- [Claude Code 공식 문서 — Subagents](https://docs.anthropic.com/en/docs/claude-code/sub-agents)
+- [Claude Code 공식 문서 — Slash Commands](https://docs.anthropic.com/en/docs/claude-code/slash-commands)
+- [Claude Code 공식 문서 — Settings](https://docs.anthropic.com/en/docs/claude-code/settings)
+- [Claude Code 공식 문서 — CLAUDE.md memory](https://docs.anthropic.com/en/docs/claude-code/memory)
 - [Hugo Content Management](https://gohugo.io/content-management/)
 - [Hugo Archetypes](https://gohugo.io/content-management/archetypes/)
