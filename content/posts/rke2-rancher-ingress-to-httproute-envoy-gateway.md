@@ -2,7 +2,17 @@
 title: "RKE2 + Rancher 환경에서 Ingress를 HTTPRoute로 마이그레이션하기 (Envoy Gateway)"
 date: 2026-06-01T17:01:15+09:00
 draft: false
-tags: ["Kubernetes", "Gateway API", "HTTPRoute", "Envoy Gateway", "Rancher", "RKE2", "Ingress", "마이그레이션"]
+tags:
+  [
+    "Kubernetes",
+    "Gateway API",
+    "HTTPRoute",
+    "Envoy Gateway",
+    "Rancher",
+    "RKE2",
+    "Ingress",
+    "마이그레이션",
+  ]
 categories: ["DevOps", "Kubernetes"]
 description: "RKE2 + Rancher 클러스터에서 기존 Ingress 리소스를 Kubernetes Gateway API의 HTTPRoute로 전환하는 과정과 삽질 기록"
 ---
@@ -25,18 +35,19 @@ Kubernetes Gateway API(HTTPRoute)는 이런 문제를 해결하기 위해 설계
 Envoy Gateway는 CNCF 프로젝트로, 이 스펙의 구현체 중 하나다.
 
 **전환 목표:**
+
 - Ingress 어노테이션 의존 제거
 - 경로별 라우팅 규칙을 YAML로 명시적으로 표현
 - 향후 트래픽 분산(Canary), 헤더 기반 라우팅 확장을 위한 기반 마련
 
 **환경 스펙:**
 
-| 항목 | 버전 |
-|------|------|
-| Rancher | 2.8.x |
-| RKE2 | v1.29.x |
-| Envoy Gateway | 1.0.x |
-| Kubernetes Gateway API CRD | v1.1.x |
+| 항목                       | 버전    |
+| -------------------------- | ------- |
+| Rancher                    | 2.8.x   |
+| RKE2                       | v1.29.x |
+| Envoy Gateway              | 1.0.x   |
+| Kubernetes Gateway API CRD | v1.1.x  |
 
 ---
 
@@ -193,7 +204,7 @@ metadata:
   name: my-app
   namespace: default
 spec:
-  parentRefs:                        # 반드시 Gateway를 명시
+  parentRefs: # 반드시 Gateway를 명시
     - name: main-gateway
       namespace: default
   hostnames:
@@ -208,7 +219,7 @@ spec:
           urlRewrite:
             path:
               type: ReplacePrefixMatch
-              replacePrefixMatch: /   # rewrite-target: / 대응
+              replacePrefixMatch: / # rewrite-target: / 대응
       backendRefs:
         - name: my-app-svc
           port: 80
@@ -224,12 +235,12 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
   name: allow-gateway-tls
-  namespace: cert-store          # Secret이 있는 네임스페이스
+  namespace: cert-store # Secret이 있는 네임스페이스
 spec:
   from:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      namespace: default         # Gateway가 있는 네임스페이스
+      namespace: default # Gateway가 있는 네임스페이스
   to:
     - group: ""
       kind: Secret
@@ -252,12 +263,12 @@ kubectl get pods -n envoy-gateway-system
 
 ## 결과
 
-| 지표 | Before (Ingress) | After (HTTPRoute) |
-|------|-----------------|-------------------|
-| 라우팅 규칙 표현 방식 | 어노테이션 (암묵적) | YAML 스펙 (명시적) |
-| 컨트롤러 종속 어노테이션 수 | 평균 6-8개 | 0개 |
-| 트래픽 분산(Canary) 지원 | 별도 CRD 필요 | HTTPRoute weight로 내장 |
-| TLS 설정 가시성 | Secret 이름만 | listener + ReferenceGrant로 명확 |
+| 지표                        | Before (Ingress)    | After (HTTPRoute)                |
+| --------------------------- | ------------------- | -------------------------------- |
+| 라우팅 규칙 표현 방식       | 어노테이션 (암묵적) | YAML 스펙 (명시적)               |
+| 컨트롤러 종속 어노테이션 수 | 평균 6-8개          | 0개                              |
+| 트래픽 분산(Canary) 지원    | 별도 CRD 필요       | HTTPRoute weight로 내장          |
+| TLS 설정 가시성             | Secret 이름만       | listener + ReferenceGrant로 명확 |
 
 ---
 
