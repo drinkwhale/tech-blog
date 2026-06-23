@@ -1,7 +1,7 @@
 ---
 title: "Kubernetes Gateway API란?"
 date: 2026-06-11T13:07:40+09:00
-draft: true
+draft: false
 tags: ["Kubernetes", "Gateway API", "Networking", "Ingress"]
 categories: ["Kubernetes"]
 mermaid: true

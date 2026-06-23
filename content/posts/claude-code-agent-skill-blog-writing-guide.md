@@ -1,7 +1,7 @@
 ---
 title: "Claude Code Agent & Skill로 블로그 글 자동 작성하기"
 date: 2026-06-02T10:00:56+09:00
-draft: false
+draft: true
 tags: ["Claude Code", "AI", "자동화", "블로그", "Agent", "Skill"]
 categories: ["AI", "자동화"]
 mermaid: true
