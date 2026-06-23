@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 450" font-family="'Segoe UI', Arial, sans-serif">
+  <defs>
+    <marker id="arrGray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+    </marker>
+    <marker id="arrPurple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7b1fa2"/>
+    </marker>
+  </defs>
+
+  <!-- VPC 외곽 -->
+  <rect x="10" y="10" width="840" height="425" rx="12" fill="#e8f4fd" stroke="#1976d2" stroke-width="2"/>
+  <rect x="10" y="10" width="840" height="32" rx="12" fill="#1976d2"/>
+  <rect x="10" y="30" width="840" height="12" fill="#1976d2"/>
+  <text x="28" y="31" font-size="13" font-weight="bold" fill="white">VPC</text>
+
+  <!-- ── 가용 영역 A ── -->
+  <rect x="30" y="55" width="245" height="310" rx="8" fill="#fffde7" stroke="#f9a825" stroke-width="1.5" stroke-dasharray="7,3"/>
+  <text x="50" y="76" font-size="11" font-weight="bold" fill="#e65100">가용 영역 A</text>
+
+  <rect x="52" y="88" width="200" height="70" rx="6" fill="#bbdefb" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="152" y="118" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d47a1">EC2 인스턴스 A</text>
+  <text x="152" y="137" text-anchor="middle" font-size="10" fill="#1565c0">ap-northeast-2a</text>
+
+  <line x1="152" y1="158" x2="152" y2="215" stroke="#546e7a" stroke-width="1.5" marker-end="url(#arrGray)"/>
+  <text x="160" y="191" font-size="9" fill="#546e7a">NFS 마운트</text>
+
+  <rect x="52" y="217" width="200" height="62" rx="6" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1.5"/>
+  <text x="152" y="243" text-anchor="middle" font-size="12" font-weight="bold" fill="#4a148c">Mount Target A</text>
+  <text x="152" y="263" text-anchor="middle" font-size="10" fill="#6a1b9a">10.0.1.x</text>
+
+  <!-- ── 가용 영역 B ── -->
+  <rect x="307" y="55" width="245" height="310" rx="8" fill="#fffde7" stroke="#f9a825" stroke-width="1.5" stroke-dasharray="7,3"/>
+  <text x="327" y="76" font-size="11" font-weight="bold" fill="#e65100">가용 영역 B</text>
+
+  <rect x="330" y="88" width="200" height="70" rx="6" fill="#bbdefb" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="430" y="118" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d47a1">EC2 인스턴스 B</text>
+  <text x="430" y="137" text-anchor="middle" font-size="10" fill="#1565c0">ap-northeast-2b</text>
+
+  <line x1="430" y1="158" x2="430" y2="215" stroke="#546e7a" stroke-width="1.5" marker-end="url(#arrGray)"/>
+  <text x="438" y="191" font-size="9" fill="#546e7a">NFS 마운트</text>
+
+  <rect x="330" y="217" width="200" height="62" rx="6" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1.5"/>
+  <text x="430" y="243" text-anchor="middle" font-size="12" font-weight="bold" fill="#4a148c">Mount Target B</text>
+  <text x="430" y="263" text-anchor="middle" font-size="10" fill="#6a1b9a">10.0.2.x</text>
+
+  <!-- ── 가용 영역 C ── -->
+  <rect x="585" y="55" width="245" height="310" rx="8" fill="#fffde7" stroke="#f9a825" stroke-width="1.5" stroke-dasharray="7,3"/>
+  <text x="605" y="76" font-size="11" font-weight="bold" fill="#e65100">가용 영역 C</text>
+
+  <rect x="608" y="88" width="200" height="70" rx="6" fill="#bbdefb" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="708" y="118" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d47a1">EC2 인스턴스 C</text>
+  <text x="708" y="137" text-anchor="middle" font-size="10" fill="#1565c0">ap-northeast-2c</text>
+
+  <line x1="708" y1="158" x2="708" y2="215" stroke="#546e7a" stroke-width="1.5" marker-end="url(#arrGray)"/>
+  <text x="716" y="191" font-size="9" fill="#546e7a">NFS 마운트</text>
+
+  <rect x="608" y="217" width="200" height="62" rx="6" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1.5"/>
+  <text x="708" y="243" text-anchor="middle" font-size="12" font-weight="bold" fill="#4a148c">Mount Target C</text>
+  <text x="708" y="263" text-anchor="middle" font-size="10" fill="#6a1b9a">10.0.3.x</text>
+
+  <!-- ── Amazon EFS (실린더) ── -->
+  <ellipse cx="430" cy="390" rx="115" ry="18" fill="#a5d6a7" stroke="#2e7d32" stroke-width="2"/>
+  <rect x="315" y="390" width="230" height="32" fill="#c8e6c9" stroke="none"/>
+  <line x1="315" y1="390" x2="315" y2="422" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="545" y1="390" x2="545" y2="422" stroke="#2e7d32" stroke-width="2"/>
+  <ellipse cx="430" cy="422" rx="115" ry="18" fill="#81c784" stroke="#2e7d32" stroke-width="2"/>
+  <text x="430" y="406" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b5e20">Amazon EFS</text>
+  <text x="430" y="424" text-anchor="middle" font-size="10" fill="#1b5e20">공유 파일 시스템 (Multi-AZ)</text>
+
+  <!-- Mount Target → EFS 화살표 -->
+  <line x1="152" y1="279" x2="328" y2="383" stroke="#7b1fa2" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrPurple)"/>
+  <line x1="430" y1="279" x2="430" y2="370" stroke="#7b1fa2" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrPurple)"/>
+  <line x1="708" y1="279" x2="533" y2="383" stroke="#7b1fa2" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrPurple)"/>
+</svg>

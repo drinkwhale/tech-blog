@@ -1,0 +1,95 @@
+<mxfile host="Electron" modified="2026-06-23T00:00:00.000Z" agent="Claude Code" version="24.0.0">
+  <diagram id="efs-architecture" name="EFS Multi-AZ Architecture">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- VPC -->
+        <mxCell id="vpc" value="VPC" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc;strokeColor=#147EBA;fillColor=#E6F2F8;verticalLabelPosition=top;verticalAlign=bottom;align=center;spacingBottom=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="860" height="500" as="geometry" />
+        </mxCell>
+
+        <!-- AZ A -->
+        <mxCell id="az-a" value="가용 영역 A" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_availability_zone;strokeColor=#D79B00;fillColor=#FFF9C4;verticalLabelPosition=top;verticalAlign=bottom;align=center;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="80" width="230" height="340" as="geometry" />
+        </mxCell>
+
+        <!-- EC2 A -->
+        <mxCell id="ec2-a" value="EC2 인스턴스 A&#xa;ap-northeast-2a" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#ED7100;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;" vertex="1" parent="1">
+          <mxGeometry x="150" y="120" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ec2-a-label" value="EC2 인스턴스 A&#xa;ap-northeast-2a" style="text;html=1;align=center;verticalAlign=top;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="115" y="185" width="130" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow EC2A → MTA -->
+        <mxCell id="arr-ec2a-mta" value="NFS 마운트" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#546e7a;fontSize=9;" edge="1" source="ec2-a" target="mt-a" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Mount Target A -->
+        <mxCell id="mt-a" value="Mount Target A&#xa;10.0.1.x" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#8C4FFF;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc_endpoint;" vertex="1" parent="1">
+          <mxGeometry x="150" y="310" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- AZ B -->
+        <mxCell id="az-b" value="가용 영역 B" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_availability_zone;strokeColor=#D79B00;fillColor=#FFF9C4;verticalLabelPosition=top;verticalAlign=bottom;align=center;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="355" y="80" width="230" height="340" as="geometry" />
+        </mxCell>
+
+        <!-- EC2 B -->
+        <mxCell id="ec2-b" value="EC2 인스턴스 B&#xa;ap-northeast-2b" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#ED7100;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;" vertex="1" parent="1">
+          <mxGeometry x="440" y="120" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow EC2B → MTB -->
+        <mxCell id="arr-ec2b-mtb" value="NFS 마운트" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#546e7a;fontSize=9;" edge="1" source="ec2-b" target="mt-b" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Mount Target B -->
+        <mxCell id="mt-b" value="Mount Target B&#xa;10.0.2.x" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#8C4FFF;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc_endpoint;" vertex="1" parent="1">
+          <mxGeometry x="440" y="310" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- AZ C -->
+        <mxCell id="az-c" value="가용 영역 C" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_availability_zone;strokeColor=#D79B00;fillColor=#FFF9C4;verticalLabelPosition=top;verticalAlign=bottom;align=center;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="80" width="230" height="340" as="geometry" />
+        </mxCell>
+
+        <!-- EC2 C -->
+        <mxCell id="ec2-c" value="EC2 인스턴스 C&#xa;ap-northeast-2c" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#ED7100;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;" vertex="1" parent="1">
+          <mxGeometry x="725" y="120" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow EC2C → MTC -->
+        <mxCell id="arr-ec2c-mtc" value="NFS 마운트" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#546e7a;fontSize=9;" edge="1" source="ec2-c" target="mt-c" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Mount Target C -->
+        <mxCell id="mt-c" value="Mount Target C&#xa;10.0.3.x" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#8C4FFF;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc_endpoint;" vertex="1" parent="1">
+          <mxGeometry x="725" y="310" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Amazon EFS -->
+        <mxCell id="efs" value="Amazon EFS&#xa;공유 파일 시스템 (Multi-AZ)" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#7AA116;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=12;fontStyle=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.efs;" vertex="1" parent="1">
+          <mxGeometry x="430" y="480" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- MT → EFS arrows -->
+        <mxCell id="arr-mta-efs" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;strokeColor=#7b1fa2;dashed=1;endArrow=open;endFill=0;" edge="1" source="mt-a" target="efs" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr-mtb-efs" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;strokeColor=#7b1fa2;dashed=1;endArrow=open;endFill=0;" edge="1" source="mt-b" target="efs" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr-mtc-efs" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;strokeColor=#7b1fa2;dashed=1;endArrow=open;endFill=0;" edge="1" source="mt-c" target="efs" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
