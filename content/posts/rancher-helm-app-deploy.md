@@ -4,6 +4,7 @@ date: 2026-07-01T14:15:56+09:00
 draft: false
 tags: [Rancher, Helm, Kubernetes, GitOps, CI/CD]
 categories: [Kubernetes]
+mermaid: true
 ---
 
 ## TL;DR
