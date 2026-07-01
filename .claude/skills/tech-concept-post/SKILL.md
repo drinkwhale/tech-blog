@@ -113,18 +113,15 @@ flowchart TD
 
 ### Mermaid 렌더링 확인
 
-PaperMod 테마에서 Mermaid를 쓰려면 `hugo.toml`에 아래 설정이 필요합니다:
-
-```toml
-[params]
-  mermaid = true
-```
-
-설정이 없으면 이미지 대체 또는 SVG 파일로 교체한다.
+`layouts/partials/extend_head.html`이 렌더링된 본문에 `class="mermaid"`가 있는지 자동 감지해서
+mermaid.js를 로드한다 (`layouts/_markup/render-codeblock-mermaid.html` render hook이 ` ```mermaid `
+코드펜스를 `<pre class="mermaid">`로 출력). 별도 front matter나 `hugo.toml` 설정 없이,
+글에 ` ```mermaid ` 코드블록만 있으면 자동으로 렌더링된다. `hugo server -D`로 브라우저에서
+실제 다이어그램이 그려지는지 최종 확인만 하면 된다.
 
 ### 길이 가이드
 
-- 입문~중급 대상: 2,000~3,500자 (한국어 기준)
+- 입문~~중급 대상: 2,000~~3,500자 (한국어 기준)
 - 섹션당 핵심 내용만, 코드는 최소 단위 예시로 제한
 - 각 섹션 끝에 독자가 기억할 1가지 포인트 명시 가능
 
